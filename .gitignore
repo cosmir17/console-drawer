@@ -1,0 +1,9 @@
+# Project exclude paths
+/modules/core/target/scala-2.13/classes/
+/modules/core/target/streams/
+/modules/tests/target/scala-2.13/test-classes/
+/modules/tests/target/streams/
+/project/project/target/
+/project/target/
+/target/specs2-reports/
+/target/streams/
