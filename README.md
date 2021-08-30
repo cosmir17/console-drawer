@@ -14,4 +14,4 @@ Here's an overview of the three different components that make this application.
 Execute ConsoleDrawerApp, please. Doesn't require an environment variables.
 
 ## How to run Tests
-sbt clean it:test test
+sbt clean test
