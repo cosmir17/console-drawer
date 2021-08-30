@@ -1,6 +1,6 @@
 Sean's Console Draw App
 =============
-This project uses Core scala
+This project uses Core scala 2.13.6
 
 ## Components Overview
 Here's an overview of the three different components that make this application.
