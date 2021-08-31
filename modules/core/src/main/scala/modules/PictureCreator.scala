@@ -15,19 +15,20 @@ object PictureCreator {
         for(i<-0 until height + 2) { arr(i)(0) = "|"; arr(i)(width + 1) = "|" }
         for(j<-0 until width + 2) { arr(0)(j) = "-"; arr(height + 1)(j) = "-" }
         arr
-      case (LineCmd(x1, y1, x2, y2), Some(c)) if x1 == x2 || y1 == y2 =>
+      case (LineCmd(x1, y1, x2, y2), Some(c)) if (x1 == x2 || y1 == y2) && c.length > y1 && c.length > y2 && c(0).length > x1 && c(0).length > x2 =>
         for(i <- y1 to y2; j <- x1 to x2) { c(i)(j) = "x" }
         c
-      case (LineCmd(x1, y1, x2, y2), Some(c)) =>
+      case (LineCmd(x1, y1, x2, y2), Some(c)) if c.length > y1 && c.length > y2 && c(0).length > x1 && c(0).length > x2 =>
         for {(i, j) <- y1 to y2 zip (x1 to x2)} {c(i)(j) = "x"}
         c
-      case (RectangleCmd(x1, y1, x2, y2), Some(c)) =>
+      case (RectangleCmd(x1, y1, x2, y2), Some(c)) if c.length > y1 && c.length > y2 && c(0).length > x1 && c(0).length > x2  =>
         for(i <- y1 to y2; j <- x1 to x2) { if(i == y1 || i == y2 || j == x1 || j == x2) {c(i)(j) = "x"} }
         c
-      case (BucketFillCmd(x, y, colour), Some(c)) =>
+      case (BucketFillCmd(x, y, colour), Some(c)) if c.length > y && c(0).length > x =>
         val xyDefaultColour = c(y)(x); detectSameTilePaint(c, y, x, xyDefaultColour, colour)
         c
-      case _ => throw new IllegalArgumentException("Please draw a canvas first")
+      case (_, Some(_)) => throw new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command")
+      case (_, None) => throw new IllegalArgumentException("Please draw a canvas first")
     }
 
   private def detectSameTilePaint(c: Canvas, y: Int, x: Int, fromColour: String, toColour: String): Unit = {

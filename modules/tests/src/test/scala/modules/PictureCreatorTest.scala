@@ -85,12 +85,20 @@ class PictureCreatorTest extends Specification {
       "with 6 3 6 4 without a canvas" in {
         execute(LineCmd(6, 3, 6, 4), None) must throwA(new IllegalArgumentException("Please draw a canvas first"))
       }
+      "and draw a line much bigger than the canvas" in {
+        val canvasReversed = lineDrawnOne.convertToCanvas()
+        execute(LineCmd(20, 50, 30, 60), Some(canvasReversed)).convertToStr() must throwA(new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command"))
+      }
     }
 
     "take r cmd" in {
       "with 14 1 18 3 and draw a rectangle" in {
         val canvasReversed = lineDrawnTwo.convertToCanvas()
         execute(RectangleCmd(14, 1, 18, 3), Some(canvasReversed)).convertToStr() mustEqual rectangle
+      }
+      "and draw a rectangle much bigger than the canvas" in {
+        val canvasReversed = lineDrawnTwo.convertToCanvas()
+        execute(RectangleCmd(20, 50, 30, 60), Some(canvasReversed)).convertToStr() must throwA(new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command"))
       }
       "with 14 1 18 3 without a canvas" in {
         execute(RectangleCmd(14, 1, 18, 3), None) must throwA(new IllegalArgumentException("Please draw a canvas first"))
@@ -110,6 +118,10 @@ class PictureCreatorTest extends Specification {
       }
       "with 10 3 o and without a canvas" in {
         execute(BucketFillCmd(10, 3, "o"), None) must throwA(new IllegalArgumentException("Please draw a canvas first"))
+      }
+      "and select a coordinate much bigger than the canvas" in {
+        val canvasReversed = lineDrawnTwo.convertToCanvas()
+        execute(BucketFillCmd(20, 50, "o"), Some(canvasReversed)).convertToStr() must throwA(new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command"))
       }
     }
   }

@@ -74,7 +74,9 @@ object ConsoleDrawerApp extends App {
 
 /*
 The following is how this class can be written using Cats effect. With it, you can write test codes for the console input and the logging.
-I didn't use Cats effect because there is a sentence in the Instruction: "Essentially, up to a level where you would be happy to have somebody look at it and judge your result."
+for example, https://github.com/cosmir17/cats-effect3-projects/blob/3f3efc001b833eeb67a5009f24c366024eedc9f5/video-asset-handler/modules/tests/src/test/scala/domain/AppExceptionHandlerTest.scala#L25
+
+I am not using Cats effect for this project because there is a sentence in the Instruction: "Essentially, up to a level where you would be happy to have somebody look at it and judge your result."
 Some people have not used Cats effect. I don't want to suggest using new technologies at the firm.
  */
 
