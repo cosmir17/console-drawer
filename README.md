@@ -1,3 +1,5 @@
+![Build Status](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiOFpwNmFkb1oxVUhBY250SmZDaXI1eFczb0M2Z01FRnozeXJRbldZVWtQbUNLRGhkYTFOUUVhblVndmtuWTlmMnJ4ZGIwTFZLdXNWRXlIdnRjdk5BMmdrPSIsIml2UGFyYW1ldGVyU3BlYyI6IlBlNXFYbHoxdW5WTFE2djQiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+
 Sean's Console Draw App
 =============
 This project uses Core scala 2.13.6
