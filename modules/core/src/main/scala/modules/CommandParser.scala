@@ -37,7 +37,6 @@ object CommandParser {
   val BucketError = new IllegalArgumentException("b cmd has 3 args, the first two need to be numeric")
   case class BucketFillCmd(x: Int, y: Int, colour: String)    extends Cmd("b", "bucket-filled")
 
-  val UndoError = new IllegalArgumentException("Can't delete canvas")
   case object UndoCmd    extends Cmd("u", "undo")
 
   val QuitError = new IllegalArgumentException("q cmd has no args, please just enter q")
