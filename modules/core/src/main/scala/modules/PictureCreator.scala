@@ -19,7 +19,7 @@ object PictureCreator {
         for(i <- y1 to y2; j <- x1 to x2) { c(i)(j) = "x" }
         c
       case (LineCmd(x1, y1, x2, y2), Some(c)) if checkIfWithinCanvas(x1, y1, x2, y2, c) => //this is for a diagonal line
-        for { (i, j) <- (y1 to y2) zip (x1 to x2) } { c(i)(j) = "x" } //zip is to iterate over two arrays (diagonal line: width and height are same)
+        ((y1 to y2) zip (x1 to x2)) foreach { case (i, j) => c(i)(j) = "x" } //zip is to iterate over two arrays (diagonal line: width and height are same)
         c
       case (RectangleCmd(x1, y1, x2, y2), Some(c)) if checkIfWithinCanvas(x1, y1, x2, y2, c)  =>
         for(i <- y1 to y2; j <- x1 to x2) { if(i == y1 || i == y2 || j == x1 || j == x2) {c(i)(j) = "x"} }
