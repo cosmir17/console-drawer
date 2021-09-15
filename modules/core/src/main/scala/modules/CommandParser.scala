@@ -13,9 +13,7 @@ object CommandParser {
     case "r" :: _                                     => throw RectangleError
     case "b" :: x :: y :: c :: Nil if areTwoInt(x, y) => BucketFillCmd(x.toInt, y.toInt, c)
     case "b" :: _                                     => throw BucketError
-    case "u" :: Nil                                   => UndoCmd
     case "u" :: _                                     => UndoCmd
-    case "undo" :: Nil                                => UndoCmd
     case "undo" :: _                                  => UndoCmd
     case "q" :: Nil                                   => Quit
     case "q" :: _                                     => throw QuitError

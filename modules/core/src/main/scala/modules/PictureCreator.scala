@@ -50,6 +50,8 @@ object PictureCreator {
         } else {
           throw new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command")
         }
+      case (UndoCmd, Some(s)) if s.isEmpty  =>
+        throw new IllegalArgumentException("Please draw a canvas first")
       case (UndoCmd, Some(s)) =>
         s.pop()
         s

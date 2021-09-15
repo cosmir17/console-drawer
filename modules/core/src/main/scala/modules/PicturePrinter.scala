@@ -12,6 +12,8 @@ object PicturePrinter {
   }
 
   implicit class StackPrinter(canvas: mutable.Stack[Canvas]) {
-    def convertToStr(): String = PicturePrinter.convertToString(canvas.pop())
+    def convertToStr(): String =
+      if (canvas.isEmpty) ""
+      else PicturePrinter.convertToString(canvas.pop())
   }
 }

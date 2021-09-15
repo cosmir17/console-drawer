@@ -147,6 +147,17 @@ class PictureCreatorTest extends Specification {
         stack.push(rectangleDrawn)
         execute(UndoCmd, Some(stack)).convertToStr() mustEqual lineDrawnTwo
       }
+
+      "for an empty canvas" in {
+        val emptyCanvas = twentyByFourCanvas.convertToCanvas()
+        val stack = mutable.Stack(emptyCanvas)
+        execute(UndoCmd, Some(stack)).convertToStr() mustEqual ""
+      }
+
+      "throw an exception if there is no canvas" in {
+        val stack = mutable.Stack[Canvas]()
+        execute(UndoCmd, Some(stack)).convertToStr() must throwA(new IllegalArgumentException("Please draw a canvas first"))
+      }
     }
   }
 
