@@ -2,31 +2,57 @@ package modules
 
 import modules.CommandParser._
 
+import scala.collection.mutable
+
 object PictureCreator {
   type Canvas = Array[Array[String]]
 
-  def execute(cmd: CommandParser.Cmd, canvas: Option[Canvas]): Canvas =
-    (cmd, canvas) match {
+  def execute(cmd: CommandParser.Cmd, stack: Option[mutable.Stack[Canvas]]): mutable.Stack[Canvas] =
+    (cmd, stack) match {
       case (CanvasCmd(0, 0), _) =>
-        Array.ofDim[String](0, 0)
+        mutable.Stack[Canvas](Array.ofDim[String](0, 0))
       case (CanvasCmd(width, height), _) =>
         val arr = Array.ofDim[String](height + 2, width + 2)
         for(i<-0 until height + 2; j<-0 until width + 2) { arr(i)(j) = " " }
         for(i<-0 until height + 2) { arr(i)(0) = "|"; arr(i)(width + 1) = "|" }
         for(j<-0 until width + 2) { arr(0)(j) = "-"; arr(height + 1)(j) = "-" }
-        arr
-      case (LineCmd(x1, y1, x2, y2), Some(c)) if (x1 == x2 || y1 == y2) && checkIfWithinCanvas(x1, y1, x2, y2, c) => //this is for a horizontal or a vertical line
-        for(i <- y1 to y2; j <- x1 to x2) { c(i)(j) = "x" }
-        c
-      case (LineCmd(x1, y1, x2, y2), Some(c)) if checkIfWithinCanvas(x1, y1, x2, y2, c) => //this is for a diagonal line
-        ((y1 to y2) zip (x1 to x2)) foreach { case (i, j) => c(i)(j) = "x" } //zip is to iterate over two arrays (diagonal line: width and height are same)
-        c
-      case (RectangleCmd(x1, y1, x2, y2), Some(c)) if checkIfWithinCanvas(x1, y1, x2, y2, c)  =>
-        for(i <- y1 to y2; j <- x1 to x2) { if(i == y1 || i == y2 || j == x1 || j == x2) {c(i)(j) = "x"} }
-        c
-      case (BucketFillCmd(x, y, colour), Some(c)) if checkIfWithinCanvas(x, y, c) =>
-        val xyDefaultColour = c(y)(x); detectSameTilePaint(c, y, x, xyDefaultColour, colour)
-        c
+        mutable.Stack[Canvas](arr)
+      case (LineCmd(x1, y1, x2, y2), Some(s)) if (x1 == x2 || y1 == y2) => //this is for a horizontal or a vertical line
+        val canvas = s.pop()
+        if (checkIfWithinCanvas(x1, y1, x2, y2, canvas)) {
+        for(i <- y1 to y2; j <- x1 to x2) { canvas(i)(j) = "x" }
+        s.push(canvas)
+        } else {
+          throw new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command")
+        }
+      case (LineCmd(x1, y1, x2, y2), Some(s)) => //this is for a diagonal line
+        val canvas = s.pop()
+        if (checkIfWithinCanvas(x1, y1, x2, y2, canvas)) {
+          ((y1 to y2) zip (x1 to x2)) foreach { case (i, j) => canvas(i)(j) = "x" } //zip is to iterate over two arrays (diagonal line: width and height are same)
+          s.push(canvas)
+        } else {
+          throw new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command")
+        }
+      case (RectangleCmd(x1, y1, x2, y2), Some(s))  =>
+        val canvas = s.pop()
+        if (checkIfWithinCanvas(x1, y1, x2, y2, canvas)) {
+        for(i <- y1 to y2; j <- x1 to x2) { if(i == y1 || i == y2 || j == x1 || j == x2) {canvas(i)(j) = "x"} }
+          s.push(canvas)
+        } else {
+          throw new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command")
+        }
+      case (BucketFillCmd(x, y, colour), Some(s)) =>
+        val canvas = s.pop()
+        if (checkIfWithinCanvas(x, y, canvas)) {
+          val xyDefaultColour = canvas(y)(x)
+          detectSameTilePaint(canvas, y, x, xyDefaultColour, colour)
+          s.push(canvas)
+        } else {
+          throw new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command")
+        }
+      case (UndoCmd, Some(s)) =>
+        s.pop()
+        s
       case (_, Some(_)) => throw new IllegalArgumentException("Please provide a suitable canvas that meets the requirements for your command")
       case (_, None) => throw new IllegalArgumentException("Please draw a canvas first")
     }
