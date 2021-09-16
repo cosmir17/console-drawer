@@ -1,5 +1,4 @@
-import modules.PictureCreator.Canvas
-import modules.{CommandParser, PictureCreator}
+import modules.{Canvas, CommandParser, PictureCreator}
 import modules.PicturePrinter._
 
 import scala.collection.mutable

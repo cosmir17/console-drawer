@@ -1,7 +1,7 @@
 package modules
 
 import modules.CommandParser._
-import modules.PictureCreator.{Canvas, execute}
+import modules.PictureCreator.execute
 import modules.PicturePrinter._
 import org.specs2.mutable.Specification
 
@@ -57,7 +57,7 @@ class PictureCreatorTest extends Specification {
     "take l cmd" in {
       "with 1 2 6 2 and draw a line" in {
         val canvasReversed = twentyByFourCanvas.convertToCanvas()
-        canvasReversed.convertToStr() mustEqual twentyByFourCanvas
+        canvasReversed.convertToString() mustEqual twentyByFourCanvas
         execute(LineCmd(1, 2, 6, 2), Some(mutable.Stack(canvasReversed))).convertToStr() mustEqual lineDrawnOne
       }
       "with 3 2 3 2 and draw a line" in {
@@ -133,7 +133,11 @@ class PictureCreatorTest extends Specification {
         val stack = mutable.Stack(emptyCanvas)
         val lineDrawn = lineDrawnOne.convertToCanvas()
         stack.push(lineDrawn)
-        execute(UndoCmd, Some(stack)).convertToStr() mustEqual twentyByFourCanvas
+        stack.size mustEqual 2
+        val result = execute(UndoCmd, Some(stack))
+        result.size mustEqual 1
+        result.convertToStr() mustEqual twentyByFourCanvas
+        result.size mustEqual 1
       }
 
       "undo a rectangle to an empty canvas" in {
@@ -145,17 +149,26 @@ class PictureCreatorTest extends Specification {
         stack.push(lineDrawn2)
         val rectangleDrawn = rectangle.convertToCanvas()
         stack.push(rectangleDrawn)
-        execute(UndoCmd, Some(stack)).convertToStr() mustEqual lineDrawnTwo
+        stack.size mustEqual 4
+        val result = execute(UndoCmd, Some(stack))
+        result.size mustEqual 3
+        result.convertToStr() mustEqual lineDrawnTwo
+        result.size mustEqual 3
       }
 
       "for an empty canvas" in {
         val emptyCanvas = twentyByFourCanvas.convertToCanvas()
         val stack = mutable.Stack(emptyCanvas)
-        execute(UndoCmd, Some(stack)).convertToStr() mustEqual ""
+        stack.size mustEqual 1
+        val result = execute(UndoCmd, Some(stack))
+        result.size mustEqual 0
+        result.convertToStr() mustEqual ""
+        result.size mustEqual 0
       }
 
       "throw an exception if there is no canvas" in {
         val stack = mutable.Stack[Canvas]()
+        stack.size mustEqual 0
         execute(UndoCmd, Some(stack)).convertToStr() must throwA(new IllegalArgumentException("Please draw a canvas first"))
       }
     }
@@ -164,9 +177,9 @@ class PictureCreatorTest extends Specification {
   implicit class ForTest(canvas: String) {
     def convertToCanvas(): Canvas = {
       val rows = canvas.split("\n")
-      val c = Array.ofDim[String](rows.size, rows(0).length)
-      for(i <-0 until rows.size; j <- 0 until rows(0).length) {
-        c(i)(j) = rows(i).substring(j, j + 1)
+      val c = Canvas(rows(0).length - 2, rows.length - 2)
+      for (i <- 0 until rows(0).length; j <- 0 until rows.length) {
+        c.assign(i, j, rows(j).substring(i, i + 1))
       }
       c
     }
