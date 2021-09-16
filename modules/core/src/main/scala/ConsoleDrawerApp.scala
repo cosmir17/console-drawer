@@ -1,11 +1,12 @@
-import modules.PictureCreator.Canvas
-import modules.{CommandParser, PictureCreator}
+import modules.{Canvas, CommandParser, PictureCreator}
 import modules.PicturePrinter._
 
+import scala.collection.mutable
 import scala.io.StdIn._
 import cats.implicits._
 import modules.CommandParser.{Help, Quit}
-import scala.util.{Try,Success,Failure}
+
+import scala.util.{Failure, Success, Try}
 
 object ConsoleDrawerApp extends App {
   val help = """
@@ -44,14 +45,14 @@ object ConsoleDrawerApp extends App {
       drawingOnCanvas()
   }
 
-  private def repeated(prevImg: Canvas): Option[Canvas] = common(Option(prevImg))
+  private def repeated(prevImg: mutable.Stack[Canvas]): Option[mutable.Stack[Canvas]] = common(Option(prevImg))
 
   /**
    * 'common' method can not be used as foldM's second argument. for that reason, 'repeated' method was created.
    * @param canvas
    * @return
    */
-  private def common(canvas: Option[Canvas]): Option[Canvas] = {
+  private def common(canvas: Option[mutable.Stack[Canvas]]): Option[mutable.Stack[Canvas]] = {
     println("enter command: e.g. help")
     val command = CommandParser.execute(readLine())
     (command, canvas) match {

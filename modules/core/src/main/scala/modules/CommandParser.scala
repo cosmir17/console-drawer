@@ -13,6 +13,8 @@ object CommandParser {
     case "r" :: _                                     => throw RectangleError
     case "b" :: x :: y :: c :: Nil if areTwoInt(x, y) => BucketFillCmd(x.toInt, y.toInt, c)
     case "b" :: _                                     => throw BucketError
+    case "u" :: _                                     => UndoCmd
+    case "undo" :: _                                  => UndoCmd
     case "q" :: Nil                                   => Quit
     case "q" :: _                                     => throw QuitError
     case "h" :: _                                     => Help
@@ -34,6 +36,8 @@ object CommandParser {
 
   val BucketError = new IllegalArgumentException("b cmd has 3 args, the first two need to be numeric")
   case class BucketFillCmd(x: Int, y: Int, colour: String)    extends Cmd("b", "bucket-filled")
+
+  case object UndoCmd    extends Cmd("u", "undo")
 
   val QuitError = new IllegalArgumentException("q cmd has no args, please just enter q")
   case object Quit                                            extends Cmd("q", "quick")

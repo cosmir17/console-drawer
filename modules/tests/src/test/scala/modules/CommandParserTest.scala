@@ -158,6 +158,15 @@ class CommandParserTest extends Specification with Matchers {
       }
     }
 
+    "take undo cmd" in {
+      "standard input" in {
+        execute("undo") mustEqual UndoCmd
+      }
+      "standard shortened input" in {
+        execute("u") mustEqual UndoCmd
+      }
+    }
+
     "take q cmd" in {
       "standard input" in {
         execute("q") mustEqual Quit
